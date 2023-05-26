@@ -1,0 +1,36 @@
+version: "3.8"
+
+x-default-app:
+  &default-app
+  build:
+    context: .
+    target: dev
+  volumes:
+    - .:/code
+  stdin_open: true
+  tty: true
+
+services:
+  fastapi:
+    <<: *default-app
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+
+  postgres:
+    image: "postgres:15-alpine"
+    restart: on-failure
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Run a command after the container starts to create the test database
+      - ./scripts/create_test_db.sh:/docker-entrypoint-initdb.d/create_test_db.sh
+    environment:
+      - POSTGRES_DB=alchemist
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+
+volumes:
+  postgres_data: {}

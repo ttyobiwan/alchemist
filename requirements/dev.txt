@@ -1,0 +1,5 @@
+-r base.txt
+
+pytest==7.3.1
+pytest-asyncio==0.21.0
+httpx==0.24.1
