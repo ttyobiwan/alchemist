@@ -1,5 +1,5 @@
 fastapi==0.95.2
-pydantic[dotenv]
+pydantic[dotenv]==1.10.8
 uvicorn==0.22.0
 sqlalchemy[asyncio]==2.0.15
 asyncpg==0.27.0

@@ -1,4 +1,3 @@
-import logging
 from collections.abc import AsyncGenerator
 
 from sqlalchemy import exc
@@ -10,8 +9,6 @@ from sqlalchemy.ext.asyncio import (
 
 from alchemist.config import settings
 
-logger = logging.getLogger(__name__)
-
 
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
     engine = create_async_engine(settings.DATABASE_URL)
@@ -20,7 +17,6 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
         try:
             yield session
             await session.commit()
-        except exc.SQLAlchemyError as error:
-            logger.warning(f"Database error occured, rolling back: {error}")
+        except exc.SQLAlchemyError:
             await session.rollback()
             raise
