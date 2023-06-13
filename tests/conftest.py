@@ -28,9 +28,9 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
 
-    factory = async_sessionmaker(engine)
-    async with factory() as session:
-        yield session
+    session = async_sessionmaker(engine)()
+    yield session
+    await session.close()
 
 
 @pytest.fixture()
