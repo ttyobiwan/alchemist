@@ -16,11 +16,11 @@ async def create_ingredient(
     data: models.IngredientPayload,
     session: AsyncSession = Depends(get_db_session),
 ) -> models.Ingredient:
-    ingredient = db_models.Ingredient(**data.dict())
+    ingredient = db_models.Ingredient(**data.model_dump())
     session.add(ingredient)
     await session.commit()
     await session.refresh(ingredient)
-    return models.Ingredient.from_orm(ingredient)
+    return models.Ingredient.model_validate(ingredient)
 
 
 @router.get("/ingredients", status_code=status.HTTP_200_OK)
@@ -28,7 +28,7 @@ async def get_ingredients(
     session: AsyncSession = Depends(get_db_session),
 ) -> list[models.Ingredient]:
     ingredients = await session.scalars(select(db_models.Ingredient))
-    return [models.Ingredient.from_orm(ingredient) for ingredient in ingredients]
+    return [models.Ingredient.model_validate(ingredient) for ingredient in ingredients]
 
 
 @router.get("/ingredients/{pk}", status_code=status.HTTP_200_OK)
@@ -42,7 +42,7 @@ async def get_ingredient(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Ingredient does not exist",
         )
-    return models.Ingredient.from_orm(ingredient)
+    return models.Ingredient.model_validate(ingredient)
 
 
 @router.post("/potions", status_code=status.HTTP_201_CREATED)
@@ -50,7 +50,7 @@ async def create_potion(
     data: models.PotionPayload,
     session: AsyncSession = Depends(get_db_session),
 ) -> models.Potion:
-    data_dict = data.dict()
+    data_dict = data.model_dump()
     ingredients = await session.scalars(
         select(db_models.Ingredient).where(
             db_models.Ingredient.pk.in_(data_dict.pop("ingredients"))
@@ -60,7 +60,7 @@ async def create_potion(
     session.add(potion)
     await session.commit()
     await session.refresh(potion)
-    return models.Potion.from_orm(potion)
+    return models.Potion.model_validate(potion)
 
 
 @router.get("/potions", status_code=status.HTTP_200_OK)
@@ -68,7 +68,7 @@ async def get_potions(
     session: AsyncSession = Depends(get_db_session),
 ) -> list[models.Potion]:
     potions = await session.scalars(select(db_models.Potion))
-    return [models.Potion.from_orm(potion) for potion in potions]
+    return [models.Potion.model_validate(potion) for potion in potions]
 
 
 @router.get("/potions/{pk}", status_code=status.HTTP_200_OK)
@@ -82,4 +82,4 @@ async def get_potion(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Potion does not exist",
         )
-    return models.Potion.from_orm(potion)
+    return models.Potion.model_validate(potion)

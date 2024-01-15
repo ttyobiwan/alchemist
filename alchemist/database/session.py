@@ -11,7 +11,7 @@ from alchemist.config import settings
 
 
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
-    engine = create_async_engine(settings.DATABASE_URL)
+    engine = create_async_engine(settings.database_url)
     factory = async_sessionmaker(engine)
     async with factory() as session:
         try:

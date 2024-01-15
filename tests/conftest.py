@@ -19,8 +19,8 @@ from alchemist.database.session import get_db_session
 @pytest_asyncio.fixture()
 async def db_session() -> AsyncGenerator[AsyncSession, None]:
     """Start a test database session."""
-    db_name = settings.DATABASE_URL.split("/")[-1]
-    db_url = settings.DATABASE_URL.replace(f"/{db_name}", "/test")
+    db_name = settings.database_url.split("/")[-1]
+    db_url = settings.database_url.replace(f"/{db_name}", "/test")
 
     engine = create_async_engine(db_url)
 

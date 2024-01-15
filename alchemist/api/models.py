@@ -1,16 +1,15 @@
 import uuid
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Ingredient(BaseModel):
     """Ingredient model."""
 
+    model_config = ConfigDict(from_attributes=True)
+
     pk: uuid.UUID
     name: str
-
-    class Config:
-        orm_mode = True
 
 
 class IngredientPayload(BaseModel):
@@ -22,16 +21,15 @@ class IngredientPayload(BaseModel):
 class Potion(BaseModel):
     """Potion model."""
 
+    model_config = ConfigDict(from_attributes=True)
+
     pk: uuid.UUID
     name: str
     ingredients: list[Ingredient]
-
-    class Config:
-        orm_mode = True
 
 
 class PotionPayload(BaseModel):
     """Potion payload model."""
 
     name: str = Field(min_length=1, max_length=127)
-    ingredients: list[uuid.UUID] = Field(min_items=1)
+    ingredients: list[uuid.UUID] = Field(min_length=1)

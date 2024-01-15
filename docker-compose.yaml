@@ -17,6 +17,8 @@ services:
       - 8000:8000
     depends_on:
       - postgres
+    env_file:
+      - .env
 
   postgres:
     image: "postgres:15-alpine"
