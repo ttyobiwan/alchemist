@@ -5,7 +5,7 @@ from alchemist.api.v2.routes import router as v2_router
 from alchemist.config import settings
 
 app = FastAPI(
-    title=settings.PROJECT_NAME,
+    title=settings.project_name,
     docs_url="/api/docs",
     openapi_url="/api/openapi.json",
 )

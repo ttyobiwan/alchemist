@@ -16,21 +16,14 @@ repos:
       - id: check-toml
       - id: check-yaml
 
-  - repo: https://github.com/psf/black
-    rev: 23.3.0
-    hooks:
-      - id: black
-        name: Black
-
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.269
+    rev: v0.1.6
     hooks:
       - id: ruff
-        name: Ruff
         args: ["--fix"]
+      - id: ruff-format
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.3.0
+    rev: v1.7.1
     hooks:
       - id: mypy
-        name: MyPy

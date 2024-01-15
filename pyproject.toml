@@ -1,6 +1,3 @@
-[tool.black]
-line-length = 88
-
 [tool.ruff]
 line-length = 88
 select = ["E", "F", "I", "UP", "N", "S", "C", "B"]
@@ -13,3 +10,7 @@ ignore = ["B008"]
 pythonpath = "alchemist"
 testpaths = "tests"
 asyncio_mode = "auto"
+
+[tool.pyright]
+venvPath = "."
+venv = "venv"

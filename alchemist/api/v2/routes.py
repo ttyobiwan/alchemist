@@ -25,14 +25,14 @@ async def create_ingredient(
     data: models.IngredientPayload,
     repository: IngredientRepository,
 ) -> models.Ingredient:
-    ingredient = await repository.create(data.dict())
-    return models.Ingredient.from_orm(ingredient)
+    ingredient = await repository.create(data.model_dump())
+    return models.Ingredient.model_validate(ingredient)
 
 
 @router.get("/ingredients", status_code=status.HTTP_200_OK)
 async def get_ingredients(repository: IngredientRepository) -> list[models.Ingredient]:
     ingredients = await repository.filter()
-    return [models.Ingredient.from_orm(ingredient) for ingredient in ingredients]
+    return [models.Ingredient.model_validate(ingredient) for ingredient in ingredients]
 
 
 @router.get("/ingredients/{pk}", status_code=status.HTTP_200_OK)
@@ -46,7 +46,7 @@ async def get_ingredient(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Ingredient does not exist",
         )
-    return models.Ingredient.from_orm(ingredient)
+    return models.Ingredient.model_validate(ingredient)
 
 
 @router.post("/potions", status_code=status.HTTP_201_CREATED)
@@ -55,18 +55,18 @@ async def create_potion(
     ingredient_repository: IngredientRepository,
     potion_repository: PotionRepository,
 ) -> models.Potion:
-    data_dict = data.dict()
+    data_dict = data.model_dump()
     ingredients = await ingredient_repository.filter(
         db_models.Ingredient.pk.in_(data_dict.pop("ingredients"))
     )
     potion = await potion_repository.create({**data_dict, "ingredients": ingredients})
-    return models.Potion.from_orm(potion)
+    return models.Potion.model_validate(potion)
 
 
 @router.get("/potions", status_code=status.HTTP_200_OK)
 async def get_potions(repository: PotionRepository) -> list[models.Potion]:
     potions = await repository.filter()
-    return [models.Potion.from_orm(potion) for potion in potions]
+    return [models.Potion.model_validate(potion) for potion in potions]
 
 
 @router.get("/potions/{pk}", status_code=status.HTTP_200_OK)
@@ -77,4 +77,4 @@ async def get_potion(pk: uuid.UUID, repository: PotionRepository) -> models.Poti
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Potion does not exist",
         )
-    return models.Potion.from_orm(potion)
+    return models.Potion.model_validate(potion)

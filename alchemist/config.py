@@ -1,6 +1,6 @@
 import logging
 
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 logging.basicConfig(level=logging.INFO)
 
@@ -8,16 +8,12 @@ logging.basicConfig(level=logging.INFO)
 class Settings(BaseSettings):
     """App settings."""
 
-    PROJECT_NAME: str = "alchemist"
-    DEBUG: bool = False
-    ENVIRONMENT: str = "local"
+    project_name: str = "alchemist"
+    debug: bool = False
+    environment: str = "local"
 
     # Database
-    DATABASE_URL: str = ""
-
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    database_url: str = ""
 
 
 settings = Settings()
